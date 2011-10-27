@@ -1,7 +1,7 @@
 #!/usr/bin/newlisp
 
 ;;;
-;;; This file is a part of the **newlisp-dict** project, release under
+;;; This file is a part of the **newlisp-tim** project, release under
 ;;; the terms of the MIT License
 ;;;
 ;;; See COPYING for more details.
