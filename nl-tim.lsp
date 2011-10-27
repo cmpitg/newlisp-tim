@@ -11,14 +11,15 @@
 
 (context 'MAIN)
 
-(define *type-symbols-lst*
-  (list 'list-t 'integer-t 'string-t 'symbol-t
-        'array-t 'true-t 'dict-t))
-
-(define *functions-lst*
+(define NL-TIM:FuncLst
   (list 'zip 'type-of 'make-global))
 
-;;; @doc: Inspired by Python's ``zip`` function.
+;;; See newlisp.h for more detail
+(define NL-TIM:Types
+  (list "boolean" "boolean" "integer" "float" "string" "symbol" "context"
+        "primitive" "primitive" "primitive" "quote" "list" "lambda" "macro"
+        "array"))
+
 (define (zip)
   "zip 2 or more lists"
   (letn ((n (apply min (map length (args)))) ; get the minimum length
@@ -31,25 +32,20 @@
         (push tmp res -1)))
     res))
 
+;;; see newlisp.h in newLISP's original source code for more detail
 (define (type-of symbol)
 
   (define (investigate-type lst)
-    (if (null? lst)                'list-t ; empty list
-        (= 1 (length lst))         'list-t ; one-element list
-        (= (first lst)    'dict-t) 'dict-t ; dict
-                                   'list-t ; ordinary list
-        )
-    )
+    (if (null? lst)                "list"           ; empty list
+        (context? (first lst))     (term (first x)) ; FOOP
+        (= 1 (length lst))         "list"           ; one-element list
+        (= (first lst)    'dict-t) "dict"           ; dict
+        (NL-TIM:Types (& 0xf ((dump symbol) 1)))))
 
-  (if (integer? symbol)  'integer-t
-      (string? symbol)   'string-t
-      (symbol? symbol)   'symbol-t
-      (array? symbol)    'array-t
-      (list? symbol)     (investigate-type symbol)
-      (true? symbol)     'true-t
-                         'symbol-t
-      )
-)
+  ;; (println "\n[DEBUG] type-of: " x " => " ((dump symbol) 1))
+  (if (list? symbol)
+      (investigate-type symbol)
+      (NL-TIM:Types (& 0xf ((dump symbol) 1)))))
 
 ;;;
 ;;; helpers
@@ -60,12 +56,8 @@
     (if (symbol? sb)
         (global sb))))
 
-;;; making all the type symbols global
-
-(apply make-global *type-symbols-lst*)
-
 ;;; making all the functions global
 
-(apply make-global *functions-lst*)
+(apply make-global NL-TIM:FuncLst)
 
 (context 'MAIN)

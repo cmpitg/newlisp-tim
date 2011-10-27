@@ -18,10 +18,15 @@
 
 (println (map (fn (s)
                 (println s "\t\t => " (type-of s)))
-              (list 1 "1" 'abc (array 3 '(1 4 "aoeu"))
-                    '(1 4 3))))
-
-(exit)
+              (list true
+                    nil
+                    1
+                    "string"
+                    'abc
+                    (array 2 '(4 "a"))
+                    '(1 4 3)
+                    MAIN
+                    (fn (x) nil))))
 
 ;; (context 'MAIN)
 ;; (exit)
